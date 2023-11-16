@@ -50,7 +50,7 @@ six==1.16.0
 sklite==0.0.2
 tensorboard==2.14.1
 tensorboard-data-server==0.7.2
-tensorflow==2.14.0
+tensorflow-cpu
 tensorflow-estimator==2.14.0
 tensorflow-hub==0.15.0
 tensorflow-intel==2.14.0
