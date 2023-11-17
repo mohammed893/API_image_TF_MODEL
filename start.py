@@ -5,11 +5,11 @@ import pandas as pd
 import os
 import numpy as np
 
-app = Flask(__name__)
+##----------------------------will be pre prepared by AI Team------------------------------------###
 
 IMG_SIZE = 224
 BATCH_SIZE = 32
-
+#->List of the Dogs unique breeds
 unique = ['affenpinscher', 'afghan_hound', 'african_hunting_dog', 'airedale',
        'american_staffordshire_terrier', 'appenzeller',
        'australian_terrier', 'basenji', 'basset', 'beagle',
@@ -46,6 +46,7 @@ unique = ['affenpinscher', 'afghan_hound', 'african_hunting_dog', 'airedale',
        'vizsla', 'walker_hound', 'weimaraner', 'welsh_springer_spaniel',
        'west_highland_white_terrier', 'whippet',
        'wire-haired_fox_terrier', 'yorkshire_terrier']
+#->Turns image into a numerical Form -Tensor- Given the Path
 def process_img (image_path , img_size = IMG_SIZE) :
   """
   TAKE PATH TURN AND INTO TENSOR
@@ -61,6 +62,7 @@ def process_img (image_path , img_size = IMG_SIZE) :
   #resize image to our desired value (224 , 224)
   image = tf.image.resize(image , size = [img_size , img_size])
   return image
+#->Slices the Test set into batches (Will be Useful in the case of Big test set to reduce the effort of CPU) 
 def create_data_batches(x , y = None , batch_size = BATCH_SIZE , valid_data = False , 
                         test_data = False):
   """
@@ -94,6 +96,7 @@ def create_data_batches(x , y = None , batch_size = BATCH_SIZE , valid_data = Fa
     #Turn the Training data into batches
     data_batch = data.batch(BATCH_SIZE)
     return data_batch
+#->Loading the model Done By AI Team to use it 
 def load_model(model_path):
   """
 load a saved model from a path
@@ -101,34 +104,47 @@ load a saved model from a path
   print("Loading Saved Model")
   model = tf.keras.models.load_model(model_path, custom_objects={"KerasLayer" : hub.KerasLayer})
   return model
-def ready (path):
+#->Given the image path you will Predict the label
+def predict (path):
     test_filenames = [path]
     test_data = create_data_batches(test_filenames, test_data=True)
     test_predictions = model.predict(test_data, verbose = 0)
     return f"label:{unique[np.argmax(test_predictions[0])]}"
 
+##----------------------------will be pre prepared by AI Team------------------------------------###
 
 
-#Loading Model 
+
+
+
+
+##----------------------------will be pre prepared by API Team------------------------------------###
+
+app = Flask(__name__)
+
+
+#Loading The DeepLearning Model 
 model = load_model("20231116-05051700111111-1000.h5")
 
 #path for the testing photos
 test_path = "static/"
 
 
-# routes
+#The Home Route
 @app.route("/", methods=['GET', 'POST'])
 def main():
 	return render_template("index.html")
 
+
+#The submit Root (The route used to predict)
 @app.route("/submit", methods = ['GET', 'POST'])
 def get_output():
 	if request.method == 'POST':
 		img = request.files['my_image']
 		img_path = "static/" + img.filename	
 		img.save(img_path) 
-		p = ready(img_path)
-	return p
+		prediction = predict(img_path)
+	return prediction
 
 
 if __name__ =='__main__':
