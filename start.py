@@ -66,36 +66,14 @@ def process_img (image_path , img_size = IMG_SIZE) :
 def create_data_batches(x , y = None , batch_size = BATCH_SIZE , valid_data = False , 
                         test_data = False):
   """
-  Create Batches of data out of image (X) and label (y) pairs
-  Shuffles the data -- TO MAKE SURE ORDER does not affect out model
-  DON'T shuffle if it's a validation data
+  Create Batches of data 
   """
-  #if the data is a test data set , we don't have labels
   if test_data:
     print("Creating test data batches")
     data = tf.data.Dataset.from_tensor_slices((tf.constant(x))) #only filepath no labels
     data_batch = data.map(process_img).batch(batch_size)
     return data_batch
-#If the data is a valid dataset , we don't need to shuffle it
-#   elif valid_data:
-#     print("Creating Valid data batches")
-#     data = tf.data.Dataset.from_tensor_slices((tf.constant(x) , #File_paths
-#                                                tf.constant(y))) #Labels
-#     data_batch = data.map(get_img_label).batch(batch_size)
-#     return data_batch
-#   #Train data , we have labels , we have to shuffle
-  else:
-    # print("Creating Train data batches")
-    # #Turn filepaths and labels into Tensors
-    # data = tf.data.Dataset.from_tensor_slices((tf.constant(x) , tf.constant(y)))
-    # #Shuffling 
-    # data = data.shuffle(buffer_size = len(x))
-    # #Creating (image , label) tuples (this also turns th e img path into a preprocessed img)
-    # data = data.map(get_img_label)
 
-    #Turn the Training data into batches
-    data_batch = data.batch(BATCH_SIZE)
-    return data_batch
 #->Loading the model Done By AI Team to use it 
 def load_model(model_path):
   """
