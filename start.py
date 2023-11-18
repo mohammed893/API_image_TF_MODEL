@@ -102,10 +102,10 @@ app = Flask(__name__)
 
 
 #Loading The DeepLearning Model 
-model = load_model("20231116-05051700111111-1000.h5")
+model = load_model("API_image_TF_MODEL-main/20231116-05051700111111-1000.h5")
 
 #path for the testing photos
-test_path = "static/"
+test_path = "API_image_TF_MODEL-main\static"
 
 
 #The Home Route
@@ -119,7 +119,7 @@ def main():
 def get_output():
 	if request.method == 'POST':
 		img = request.files['my_image']
-		img_path = "static/" + img.filename	
+		img_path = "API_image_TF_MODEL-main/static/" + img.filename	
 		img.save(img_path) 
 		prediction = predict(img_path)
 	return prediction
